@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página en mantenimiento</title>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.0/build/spline-viewer.js"></script>
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Ensure no scrollbars appear */
+            background-color: #000; /* Match the Matrix background */
+        }
+        #canv {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Place it behind everything */
+        }
+        spline-viewer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Above the canvas */
+            --spline-background: transparent; /* Make Spline background transparent */
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2; /* Ensure the text is above everything */
+        }
+        h1 {
+            font-size: 2em;
+            color: #cdcdcd;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #cdcdcd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Canvas -->
+    <canvas id="canv"></canvas>
+
+    <!-- Spline Viewer -->
+    <spline-viewer hint loading-anim-type="spinner-small-dark" url="https://prod.spline.design/K-je4NBzcnpNI3Iu/scene.splinecode"></spline-viewer> 
+
+    <!-- Text Content -->
+    <div class="container">
+        <h1>¡Volvemos pronto!</h1>
+        <h2>Nuestro sitio se encuentra en una mantención programada.</h2>
+    </div>
+
+    <!-- Existing Spline Script -->
+    <script>
+        // Check if Spline Viewer is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const splineViewer = document.querySelector('spline-viewer');
+            if (splineViewer) {
+                console.log('Spline Viewer element is found');
+                splineViewer.addEventListener('load', () => {
+                    console.log('Spline scene has been loaded');
+                });
+                splineViewer.addEventListener('error', (event) => {
+                    console.error('Error loading Spline scene', event);
+                });
+            } else {
+                console.error('Spline Viewer element is not found');
+            }
+        });
+    </script>
+
+    
+
+    <!-- Matrix Animation Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Your Matrix animation code here
+  
+        const canvas = document.getElementById('canv');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Characters for the Matrix effect
+        const letters = Array(256).join("1").split("");
+        let fontSize = 15;
+        let columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function draw() {
+            // Black BG for the canvas with opacity to show trail effect
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#ff9"; // Text color
+            ctx.font = fontSize + "px monospace";
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = String.fromCharCode(0x30A0 + Math.random() * 96);
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+
+        // Adjust canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = canvas.width / fontSize;
+        });
+          });
+    </script>
+</body>
+</html>
